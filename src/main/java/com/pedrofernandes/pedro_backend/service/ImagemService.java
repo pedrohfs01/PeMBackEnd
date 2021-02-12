@@ -13,7 +13,6 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
 
 @Service
 public class ImagemService {
@@ -57,7 +56,7 @@ public class ImagemService {
 
     public URI uploadImagem(MultipartFile file, Imagem img){
         BufferedImage jpgImage = imgService.getJpgImageFromFile(file);
-        jpgImage = imgService.cropSquare(jpgImage);
+        //jpgImage = imgService.cropSquare(jpgImage);
         jpgImage = imgService.resize(jpgImage, size);
 
         String fileName = prefix + img.getId() + ".jpg";
