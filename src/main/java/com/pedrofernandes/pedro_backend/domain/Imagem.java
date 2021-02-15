@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class Imagem {
     private String imageUrl;
 
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    private Date instante;
+    private LocalDateTime instante;
 
     public Long getId() {
         return id;
@@ -37,11 +39,11 @@ public class Imagem {
         this.imageUrl = imageUrl;
     }
 
-    public Date getInstante() {
+    public LocalDateTime getInstante() {
         return instante;
     }
 
-    public void setInstante(Date instante) {
+    public void setInstante(LocalDateTime instante) {
         this.instante = instante;
     }
 

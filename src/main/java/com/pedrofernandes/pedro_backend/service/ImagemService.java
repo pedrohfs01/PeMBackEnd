@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.image.BufferedImage;
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class ImagemService {
     private Integer size;
 
     public Imagem save(Imagem img){
-        img.setInstante(new Date(System.currentTimeMillis()));
+        img.setInstante(LocalDateTime.now());
         return repo.save(img);
     }
 
