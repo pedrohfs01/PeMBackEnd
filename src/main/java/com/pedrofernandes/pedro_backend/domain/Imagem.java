@@ -1,27 +1,41 @@
 package com.pedrofernandes.pedro_backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+import javax.persistence.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "imagem")
 public class Imagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "imageUrl")
     private String imageUrl;
 
+    @Column(name = "legenda")
+    private String legenda;
+
+    @ManyToOne
+    @JoinColumn(name = "autor_id")
+    private Usuario autor;
+
+    @ManyToOne
+    @JoinColumn(name = "ambiente_id")
+    private Ambiente ambiente;
+
+    @OneToMany(mappedBy = "imagem", cascade = CascadeType.ALL)
+    private List<Comentario> comentarios = new ArrayList<>();
+
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    private LocalDateTime instante;
+    private ZonedDateTime instante;
 
     public Long getId() {
         return id;
@@ -39,12 +53,44 @@ public class Imagem {
         this.imageUrl = imageUrl;
     }
 
-    public LocalDateTime getInstante() {
+    public ZonedDateTime getInstante() {
         return instante;
     }
 
-    public void setInstante(LocalDateTime instante) {
+    public void setInstante(ZonedDateTime instante) {
         this.instante = instante;
+    }
+
+    public Usuario getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Usuario autor) {
+        this.autor = autor;
+    }
+
+    public Ambiente getAmbiente() {
+        return ambiente;
+    }
+
+    public void setAmbiente(Ambiente ambiente) {
+        this.ambiente = ambiente;
+    }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public String getLegenda() {
+        return legenda;
+    }
+
+    public void setLegenda(String legenda) {
+        this.legenda = legenda;
     }
 
     @Override
