@@ -1,27 +1,19 @@
 package com.pedrofernandes.pedro_backend.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pedrofernandes.pedro_backend.domain.Imagem;
-import com.pedrofernandes.pedro_backend.domain.Usuario;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 public class ComentarioDTO {
 
-    private Usuario autor;
+    private Long autorId;
 
     private Long imagemId;
 
     private String comentario;
 
-    public Usuario getAutor() {
-        return autor;
+    public Long getAutorId() {
+        return autorId;
     }
 
-    public void setAutor(Usuario autor) {
-        this.autor = autor;
+    public void setAutorId(Long autorId) {
+        this.autorId = autorId;
     }
 
     public Long getImagemId() {

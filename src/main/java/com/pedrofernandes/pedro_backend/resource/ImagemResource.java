@@ -1,5 +1,6 @@
 package com.pedrofernandes.pedro_backend.resource;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.pedrofernandes.pedro_backend.domain.Imagem;
 import com.pedrofernandes.pedro_backend.service.ImagemService;
 import com.pedrofernandes.pedro_backend.service.dto.ImagemDTO;
@@ -29,9 +30,13 @@ public class ImagemResource {
             URI uri = new URI("");
             for(MultipartFile file : files){
                 Imagem imagem = service.save(imagemDTO);
-                uri = service.uploadImagem(file, imagem.getId());
-                imagem.setImageUrl(uri.toString());
-                service.update(imagem);
+                try{
+                    uri = service.uploadImagem(file, imagem.getId());
+                    imagem.setImageUrl(uri.toString());
+                    service.update(imagem);
+                }catch(Exception e){
+                    service.delete(imagem.getId());
+                }
             }
             return ResponseEntity.created(uri).build();
         }else{
