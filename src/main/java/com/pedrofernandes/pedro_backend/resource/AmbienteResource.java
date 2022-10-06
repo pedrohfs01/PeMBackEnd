@@ -9,37 +9,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/ambientes")
 @CrossOrigin("*")
 public class AmbienteResource {
 
     @Autowired
     private AmbienteService ambienteService;
 
-    @PostMapping("/ambientes")
+    @PostMapping
     public ResponseEntity<Void> save(@RequestBody AmbienteDTO ambienteDto){
 
         return new ResponseEntity(ambienteService.save(ambienteDto), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/ambientes/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         ambienteService.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/ambientes/usuario/{id}")
+    @GetMapping("/usuario/{id}")
     public ResponseEntity<List<Ambiente>> findAllByUsuario(@PathVariable Long id){
         return new ResponseEntity(ambienteService.findAllByUsuario(id), HttpStatus.OK);
     }
 
 
-    @GetMapping("/ambientes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<AmbienteVisualizarDTO> getById(@PathVariable Long id){
         return new ResponseEntity(ambienteService.getById(id), HttpStatus.OK);
     }

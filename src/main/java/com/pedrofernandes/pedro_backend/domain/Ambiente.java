@@ -89,4 +89,5 @@ public class Ambiente implements Serializable {
     public void setCriador(Usuario criador) {
         this.criador = criador;
     }
+
 }

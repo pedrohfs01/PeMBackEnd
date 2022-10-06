@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/comentarios")
 @CrossOrigin("*")
 public class ComentarioResource {
 
@@ -17,12 +17,12 @@ public class ComentarioResource {
     private ComentarioService comentarioService;
 
 
-    @PostMapping("/comentarios")
+    @PostMapping
     public ResponseEntity<Void> salvar(@RequestBody ComentarioDTO comentarioDTO){
         return new ResponseEntity(comentarioService.save(comentarioDTO), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/comentarios/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         comentarioService.delete(id);
         return ResponseEntity.ok().build();

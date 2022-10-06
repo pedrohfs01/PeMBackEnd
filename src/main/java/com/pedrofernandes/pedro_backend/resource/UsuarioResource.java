@@ -14,59 +14,60 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/usuarios")
 @CrossOrigin("*")
 public class UsuarioResource {
 
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping("/usuarios")
+    @PostMapping
     public ResponseEntity<Void> save(@RequestBody UsuarioDTO usuarioDTO){
         return new ResponseEntity(usuarioService.save(usuarioDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping("/usuarios/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Usuario> findById(@PathVariable Long id){
         return new ResponseEntity(usuarioService.findById(id), HttpStatus.OK);
     }
 
-    @DeleteMapping("/usuarios/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
         usuarioService.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/usuarios/login")
+    @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody CredenciaisDTO creds){
-        if(usuarioService.login(creds)){
-            return ResponseEntity.ok().build();
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+        return usuarioService.login(creds);
     }
 
-    @GetMapping("/usuarios/ambiente/{id}")
+    @GetMapping("/ambiente/{id}")
     public ResponseEntity<List<Usuario>> getAllUsuarioByAmbiente(@PathVariable Long id){
         return new ResponseEntity(usuarioService.findAllByAmbiente(id), HttpStatus.OK);
     }
 
-    @GetMapping("/usuarios/login/{login}")
+    @GetMapping("/login/{login}")
     public ResponseEntity<Optional<Usuario>> getUsuarioByLogin(@PathVariable String login){
         return new ResponseEntity(usuarioService.findByLogin(login), HttpStatus.OK);
     }
 
-    @GetMapping("/usuarios/search")
+    @GetMapping("/search")
     public ResponseEntity<List<Usuario>> getAllByNome(@RequestParam("nome") String nome){
         return new ResponseEntity(usuarioService.findAllByNome(nome), HttpStatus.OK);
     }
 
-    @PutMapping("/usuarios/adicionar-ambiente/{idAmbiente}")
+    @GetMapping("/login")
+    public ResponseEntity<Usuario> getByLogin(@RequestParam("login") String login){
+        return new ResponseEntity(usuarioService.findByLogin(login), HttpStatus.OK);
+    }
+
+    @PutMapping("/adicionar-ambiente/{idAmbiente}")
     public void addUsuarioInAmbiente(@PathVariable Long idAmbiente, @RequestBody Usuario usuario){
         usuarioService.addUsuarioInAmbiente(idAmbiente, usuario);
     }
 
-    @PutMapping("/usuarios/remover-ambiente/{idAmbiente}")
+    @PutMapping("/remover-ambiente/{idAmbiente}")
     public void removeUsuarioInAmbiente(@PathVariable Long idAmbiente, @RequestBody Usuario usuario){
         usuarioService.removeUsuarioInAmbiente(idAmbiente, usuario);
     }

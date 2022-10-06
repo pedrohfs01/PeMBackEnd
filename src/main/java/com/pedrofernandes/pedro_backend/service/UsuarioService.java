@@ -9,6 +9,8 @@ import com.pedrofernandes.pedro_backend.service.dto.CredenciaisDTO;
 import com.pedrofernandes.pedro_backend.service.dto.UsuarioDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.Optional;
 @Service
 public class UsuarioService {
 
+    @Autowired
+    private BCryptPasswordEncoder pe;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -30,6 +34,7 @@ public class UsuarioService {
     public Usuario save(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
         BeanUtils.copyProperties(usuarioDTO, usuario);
+        usuario.setSenha(pe.encode(usuario.getSenha()));
         return usuarioRepository.save(usuario);
     }
 
@@ -45,9 +50,15 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public boolean login(CredenciaisDTO creds) {
-        Optional<Usuario> usuario = usuarioRepository.procurarUsuario(creds.getLogin(), creds.getSenha());
-        return usuario.isPresent();
+    public ResponseEntity<Void> login(CredenciaisDTO creds) {
+        Optional<Usuario> usuario = usuarioRepository.procurarUsuario(creds.getLogin());
+        if(usuario.isPresent()){
+            Usuario usuarioLogado = usuario.get();
+            if (pe.matches(creds.getSenha(), usuarioLogado.getSenha())) {
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
     public Optional<List<Usuario>> findAllByAmbiente(Long id) {

@@ -42,6 +42,14 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "id"))
     private List<Ambiente> ambientes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "criador", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Notificacao> notificacaoCriador = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuarioNotificado", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Notificacao> notificacoes = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -117,5 +125,21 @@ public class Usuario {
 
     public void setAmbientesCriador(List<Ambiente> ambientesCriador) {
         this.ambientesCriador = ambientesCriador;
+    }
+
+    public List<Notificacao> getNotificacaoCriador() {
+        return notificacaoCriador;
+    }
+
+    public void setNotificacaoCriador(List<Notificacao> notificacaoCriador) {
+        this.notificacaoCriador = notificacaoCriador;
+    }
+
+    public List<Notificacao> getNotificacoes() {
+        return notificacoes;
+    }
+
+    public void setNotificacoes(List<Notificacao> notificacoes) {
+        this.notificacoes = notificacoes;
     }
 }

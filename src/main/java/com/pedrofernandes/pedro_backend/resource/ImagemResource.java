@@ -14,9 +14,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/imagem")
 @CrossOrigin("*")
 public class ImagemResource {
 
@@ -24,7 +25,7 @@ public class ImagemResource {
     @Autowired
     ImagemService service;
 
-    @PostMapping("/imagem")
+    @PostMapping
     public ResponseEntity<Void> uploadImagem(@RequestPart("file")List<MultipartFile> files, @RequestPart("imagem") ImagemDTO imagemDTO) throws MalformedURLException, URISyntaxException {
         if(!files.isEmpty()) {
             URI uri = new URI("");
@@ -44,19 +45,27 @@ public class ImagemResource {
         }
     }
 
-    @DeleteMapping("/imagem/{id}")
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Imagem>> findImageById(@PathVariable Long id){
+
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteImagem(@PathVariable Long id){
         service.delete(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/imagem")
+    @GetMapping
     public ResponseEntity<List<Imagem>> findAllImages(){
         return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/imagem/ambiente/{id}")
+    @GetMapping("/ambiente/{id}")
     public ResponseEntity<List<Imagem>> findAllImagesByAmbiente(@PathVariable Long id){
         return new ResponseEntity(service.findAllByAmbiente(id), HttpStatus.OK);
     }
+
+
 }
