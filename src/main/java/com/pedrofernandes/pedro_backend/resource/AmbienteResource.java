@@ -21,8 +21,7 @@ public class AmbienteResource {
 
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody AmbienteDTO ambienteDto){
-
-        return new ResponseEntity(ambienteService.save(ambienteDto), HttpStatus.CREATED);
+        return ambienteService.save(ambienteDto);
     }
 
     @DeleteMapping("/{id}")

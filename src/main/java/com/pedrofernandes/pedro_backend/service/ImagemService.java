@@ -74,7 +74,7 @@ public class ImagemService {
 
     public Optional<List<Imagem>> findAllByAmbiente(Long id){
         Ambiente ambiente = ambienteService.findById(id).get();
-        return repo.findAllByAmbiente(ambiente);
+        return repo.findAllByAmbienteOrderByInstante(ambiente);
     }
 
     public Optional<Imagem> findById(Long id){

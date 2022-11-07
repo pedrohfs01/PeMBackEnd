@@ -8,6 +8,8 @@ import com.pedrofernandes.pedro_backend.service.dto.AmbienteDTO;
 import com.pedrofernandes.pedro_backend.service.dto.AmbienteVisualizarDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,15 +24,22 @@ public class AmbienteService {
     @Autowired
     private UsuarioService usuarioService;
 
-    public Ambiente save(AmbienteDTO ambienteDTO){
+    public ResponseEntity<Void> save(AmbienteDTO ambienteDTO){
         Ambiente ambiente = new Ambiente();
         BeanUtils.copyProperties(ambienteDTO, ambiente);
         Optional<Usuario> usuario = usuarioService.findById(ambienteDTO.getUsuarioId());
-        ambiente.getUsuarios().add(usuario.get());
-        ambiente.setCriador(usuario.get());
-        usuario.get().getAmbientesCriador().add(ambiente);
-        usuario.get().getAmbientes().add(ambiente);
-        return ambienteRepository.save(ambiente);
+        if(usuario.isPresent()){
+            if(usuario.get().getAmbientes().size() >= 10)
+                return ResponseEntity.badRequest().build();
+
+            ambiente.getUsuarios().add(usuario.get());
+            ambiente.setCriador(usuario.get());
+            usuario.get().getAmbientesCriador().add(ambiente);
+            usuario.get().getAmbientes().add(ambiente);
+            Ambiente ambienteCriado = ambienteRepository.save(ambiente);
+            return new ResponseEntity(ambienteCriado, HttpStatus.CREATED);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     public Optional<Ambiente> findById(Long id){

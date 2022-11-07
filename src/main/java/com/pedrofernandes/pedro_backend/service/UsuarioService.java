@@ -5,14 +5,19 @@ import com.pedrofernandes.pedro_backend.domain.Ambiente;
 import com.pedrofernandes.pedro_backend.domain.Usuario;
 import com.pedrofernandes.pedro_backend.repository.AmbienteRepository;
 import com.pedrofernandes.pedro_backend.repository.UsuarioRepository;
+import com.pedrofernandes.pedro_backend.service.dto.AlterarSenhaDTO;
 import com.pedrofernandes.pedro_backend.service.dto.CredenciaisDTO;
 import com.pedrofernandes.pedro_backend.service.dto.UsuarioDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
+import javax.swing.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +35,9 @@ public class UsuarioService {
 
     @Autowired
     AmbienteRepository ambienteRepository;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public Usuario save(UsuarioDTO usuarioDTO){
         Usuario usuario = new Usuario();
@@ -87,5 +95,66 @@ public class UsuarioService {
         Usuario usuarioSave = usuarioRepository.findById(usuario.getId()).get();
         usuarioSave.removeAmbiente(ambiente);
         usuarioRepository.save(usuarioSave);
+    }
+
+    public ResponseEntity<Void> esqueciMinhaSenha(String login) {
+        Usuario usuario = usuarioRepository.findByLogin(login).orElse(null);
+        if(usuario == null || usuario.getEmail() == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        String senhaNova = gerarSenha();
+
+        usuario.setSenha(pe.encode(senhaNova));
+        usuarioRepository.save(usuario);
+
+        try {
+            MimeMessage mail = mailSender.createMimeMessage();
+
+            MimeMessageHelper helper = new MimeMessageHelper( mail );
+            helper.setTo(usuario.getEmail());
+            helper.setSubject("Nova senha gerada para Galeria de Momentos");
+            helper.setText("<p>A nova senha gerada é: "+senhaNova+"</p>", true);
+            mailSender.send(mail);
+
+            ResponseEntity.ok(usuario);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(null);
+    }
+
+    private static String gerarSenha(){
+        String[] caracteres = { "0", "1", "b", "2", "4", "5", "6", "7", "8",
+                "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+                "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w",
+                "x", "y", "z","+","-","/","*","_","!","@","$","%","&"};
+
+        StringBuilder senha = new StringBuilder();
+
+        for (int i = 0; i < 10; i++) {
+            int posicao = (int) (Math.random() * caracteres.length);
+            senha.append(caracteres[posicao]);
+        }
+        return senha.toString();
+
+    }
+
+    public ResponseEntity<Void> alterarSenha(AlterarSenhaDTO dto) {
+        Usuario usuario = usuarioRepository.findByLogin(dto.getLogin()).orElse(null);
+        if(usuario == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!pe.matches(dto.getSenhaAtual(), usuario.getSenha())) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        usuario.setSenha(pe.encode(dto.getNovaSenha()));
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,20 +1,12 @@
 package com.pedrofernandes.pedro_backend.service.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.pedrofernandes.pedro_backend.domain.Ambiente;
-import com.pedrofernandes.pedro_backend.domain.Comentario;
-import com.pedrofernandes.pedro_backend.domain.Imagem;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class UsuarioDTO {
 
     private String login;
 
     private String senha;
 
+    private String email;
 
     private String nome;
 
@@ -41,5 +33,13 @@ public class UsuarioDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

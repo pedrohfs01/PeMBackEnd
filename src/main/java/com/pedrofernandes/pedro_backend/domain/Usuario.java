@@ -25,6 +25,9 @@ public class Usuario {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "email")
+    private String email;
+
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Comentario> comentarios = new ArrayList<>();
@@ -141,5 +144,13 @@ public class Usuario {
 
     public void setNotificacoes(List<Notificacao> notificacoes) {
         this.notificacoes = notificacoes;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

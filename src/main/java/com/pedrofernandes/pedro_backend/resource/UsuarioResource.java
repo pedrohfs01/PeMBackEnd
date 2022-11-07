@@ -2,6 +2,7 @@ package com.pedrofernandes.pedro_backend.resource;
 
 import com.pedrofernandes.pedro_backend.domain.Usuario;
 import com.pedrofernandes.pedro_backend.service.UsuarioService;
+import com.pedrofernandes.pedro_backend.service.dto.AlterarSenhaDTO;
 import com.pedrofernandes.pedro_backend.service.dto.CredenciaisDTO;
 import com.pedrofernandes.pedro_backend.service.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,4 +73,13 @@ public class UsuarioResource {
         usuarioService.removeUsuarioInAmbiente(idAmbiente, usuario);
     }
 
+    @GetMapping("/esqueci-minha-senha/{login}")
+    public ResponseEntity<Void> esqueciMinhaSenha(@PathVariable String login){
+        return usuarioService.esqueciMinhaSenha(login);
+    }
+
+    @PutMapping("/alterar-senha")
+    public ResponseEntity<Void> alterarSenha(@RequestBody AlterarSenhaDTO dto){
+        return usuarioService.alterarSenha(dto);
+    }
 }

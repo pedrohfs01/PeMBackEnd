@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ImagemRepository extends JpaRepository<Imagem, Long> {
 
-    Optional<List<Imagem>> findAllByAmbiente(Ambiente ambiente);
+    Optional<List<Imagem>> findAllByAmbienteOrderByInstante(Ambiente ambiente);
 
 }
